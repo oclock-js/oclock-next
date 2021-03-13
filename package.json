@@ -1,0 +1,37 @@
+{
+  "name": "hello-next",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "dev": "next",
+    "build": "next build && next export",
+    "start": "next start"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "dotenv": "^8.2.0",
+    "firebase": "^8.2.10",
+    "next": "9.5.5",
+    "react": "16.14.0",
+    "react-dom": "16.14.0",
+    "react-markdown": "5.0.2",
+    "react-widgets": "^4.6.1",
+    "react-widgets-simple-number": "^4.1.26"
+  },
+  "peerDependencies": {
+    "postcss": "^8.0.0"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss7-compat": "^2.0.3",
+    "@types/next-auth": "3.1.14",
+    "@types/node": "14.14.6",
+    "@types/react": "16.9.56",
+    "autoprefixer": "^9.8.6",
+    "postcss": "^7.0.35",
+    "prisma": "^2.17.0",
+    "tailwindcss": "npm:@tailwindcss/postcss7-compat@^2.0.3",
+    "typescript": "4.0.5"
+  }
+}
