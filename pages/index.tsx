@@ -11,6 +11,8 @@ const Main = (props) => {
   const [time, setTime] = useState(0);
   const [timer, setTimer] = useState(null);
 
+  const [inSecs, setInSecs] = useState(null);
+  const [secs, setSecs] = useState(0)
 
   const [sSpins, setSSpins] = useState(0)
   const [mSpins, setMSpins] = useState(0)
@@ -18,18 +20,25 @@ const Main = (props) => {
   const [mSpinsTimes, setMSpinTimes] = useState([])
   const [sSpinsTimes, setsSpinTimes] = useState([])
   
-  const [finalHour, setFinalHour] = useState(0)
+  const [initialHour, setInitialHour] = useState(1)
+  const [finalHour, setFinalHour] = useState(1)
   
   const startTimer = () => {
     setTimer(setInterval(() => {
       setTime(prevTime => prevTime + 1)
-    },1000))
+    },10))
+    setInSecs(setInterval(() => {
+      setSecs(prevTime => prevTime + 1)
+    }, 1000))
   }
 
   const stopTimer = () => {
     clearInterval(timer)
+    clearInterval(inSecs)
     setTimer(null)
     setTime(0)
+    setInSecs(null)
+    setSecs(0)
     setMSpins(0)
     setSSpins(0)
   }
@@ -52,6 +61,7 @@ const Main = (props) => {
       if (timer != null) {
         const session = {
           tiempo: time,
+          hora_incial: initialHour,
           hora_final: finalHour,
           minutero: {
             n_vueltas: mSpins,
@@ -85,36 +95,62 @@ const Main = (props) => {
     return minutesText + ':' + secondsText
   }
 
+  const renderPicker = (setter) => {
+    return Array(12).map((e,i) => (
+    <button className='mt-6 px-6 py-1 text-white rounded-md bg-green-400' onClick={() => setter(i+1)}>
+      {i+1}
+    </button>
+    ))
+  }
+  const picker = (value, setter) => {
+    return [1,2,3,4,5,6,7,8,9,10,11,12].map((e) => { 
+        return (
+          <button key={e} className={ 
+            (e != value) ? 'bg-green-400 my-2 mx-1 px-4 py-1 text-white rounded-md' : 
+            'bg-blue-500 my-2 mx-1 px-4 py-1 text-white rounded-md'
+          } onClick={() => setter(e)}>
+            {e}
+          </button>)
+         }) 
+  }
   return (
+
     <div className='p-6 max-w-3xl mx-auto'>
       <h1 className=' my-6 text-6xl'>O'clock</h1>
       <div className="grid grid-cols-2 gap-6">
-        <div className=' p-6 rounded-xl shadow-md'>
-          <h2 className='text-4xl mb-3'>Minutero</h2>
-          <h3 className='text-3xl'>{renderTime(time)}</h3>
-          <h3 className='text-3xl'>Vueltas: {mSpins}</h3>
-      <button className=' mt-6 px-6 py-1 text-white rounded-md bg-green-400' onClick={() => sumSpin(setMSpins, mSpinsTimes, setMSpinTimes)}>
-            <h3>Vuelta</h3>
-          </button>
-        </div>
-        <div  className=' p-6 rounded-xl shadow-md'>
+      <div  className=' p-6 rounded-xl shadow-md'>
           <h2 className='text-4xl mb-3'>Segundero</h2>
-          <h3 className='text-3xl'>{renderTime(time)}</h3>
+          <h3 className='text-3xl'>{renderTime(secs)}</h3>
           <h3 className='text-3xl'>Vueltas: {sSpins}</h3>
           <button className=' mt-6 px-6 py-1 text-white hover:text-green-400 hover:bg-white rounded-md bg-green-400 ' onClick={() => sumSpin(setSSpins, sSpinsTimes,  setsSpinTimes)}>
             <h3>Vuelta</h3>
           </button>
+        </div>	
+
+        <div className=' p-6 rounded-xl shadow-md'>
+          <h2 className='text-4xl mb-3'>Minutero</h2>
+          <h3 className='text-3xl'>{renderTime(secs)}</h3>
+          <h3 className='text-3xl'>Vueltas: {mSpins}</h3>
+          <button className='mt-6 px-6 py-1 text-white rounded-md bg-green-400' onClick={() => sumSpin(setMSpins, mSpinsTimes, setMSpinTimes)}>
+            <h3>Vuelta</h3>
+          </button>
+        </div>
+        
+      </div>	
+
+      <br/>
+      <div>
+        <h3>Hora inicial: {initialHour}</h3>
+        <div>
+          {picker(initialHour, setInitialHour)} 
+        </div> 
+      </div> 
+      <div>
+        <h3>Hora final: {finalHour}</h3>
+        <div>
+          {picker(finalHour, setFinalHour)}
         </div>
       </div>
-      <br/>
-      <Fragment>
-        <NumberPicker 
-        min={0} 
-        max={12}
-        value={finalHour}
-        onChange={value => setFinalHour(value)} 
-        />
-      </Fragment>
       <br/>
       <button onClick={() => (timer == null) ? startTimer() : stopTimer()} className=' mx-auto mt-6 px-6 py-1 text-white rounded-md bg-blue-500'>
           <h3>{timer == null ? 'Iniciar' : 'Parar'}</h3>
